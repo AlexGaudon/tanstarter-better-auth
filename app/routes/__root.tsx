@@ -6,10 +6,10 @@ import {
   ScriptOnce,
   ScrollRestoration,
 } from "@tanstack/react-router";
-import { createServerFn, Meta, Scripts } from "@tanstack/start";
+import { Meta, Scripts } from "@tanstack/start";
 import { lazy, Suspense } from "react";
+import { getAuthSession } from "~/lib/server/auth-functions";
 
-import { getAuthSession } from "~/lib/server/auth";
 import appCss from "~/lib/styles/app.css?url";
 
 const TanStackRouterDevtools =
@@ -22,15 +22,10 @@ const TanStackRouterDevtools =
         })),
       );
 
-const getUser = createServerFn({ method: "GET" }).handler(async () => {
-  const { user } = await getAuthSession();
-  return user;
-});
-
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   beforeLoad: async () => {
-    const user = await getUser();
-    return { user };
+    const auth = await getAuthSession();
+    return { auth };
   },
   head: () => ({
     meta: [

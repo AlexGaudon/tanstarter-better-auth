@@ -1,12 +1,13 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { Button } from "~/lib/components/ui/button";
+import { authClient } from "~/lib/utils/authClient";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
 function Home() {
-  const { user } = Route.useRouteContext();
+  const { auth } = Route.useRouteContext();
 
   return (
     <div className="flex flex-col gap-4 p-6">
@@ -18,22 +19,30 @@ function Home() {
         </pre>
       </div>
 
-      {user ? (
+      {auth.isAuthenticated ? (
         <div className="flex flex-col gap-2">
-          <p>Welcome back, {user.name}!</p>
+          <p>Welcome back, {auth.user?.name}!</p>
           <Button type="button" asChild className="w-fit" size="lg">
             <Link to="/dashboard">Go to Dashboard</Link>
           </Button>
           <div>
             More data:
-            <pre>{JSON.stringify(user, null, 2)}</pre>
+            <pre>{JSON.stringify(auth, null, 2)}</pre>
           </div>
 
-          <form method="POST" action="/api/auth/logout">
-            <Button type="submit" className="w-fit" variant="destructive" size="lg">
-              Sign out
-            </Button>
-          </form>
+          <Button
+            onClick={() => {
+              authClient.signOut().then(() => {
+                window.location.reload();
+                window.location.href = "/";
+              });
+            }}
+            className="w-fit"
+            variant="destructive"
+            size="lg"
+          >
+            Sign out
+          </Button>
         </div>
       ) : (
         <div className="flex flex-col gap-2">
@@ -46,11 +55,19 @@ function Home() {
 
       <a
         className="text-muted-foreground underline hover:text-foreground"
+        href="https://github.com/alexgaudon/tanstarter-better-auth"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        alexgaudon/tanstarter-better-auth
+      </a>
+      <a
+        className="text-muted-foreground underline hover:text-foreground"
         href="https://github.com/dotnize/tanstarter"
         target="_blank"
         rel="noreferrer noopener"
       >
-        dotnize/tanstarter
+        based on dotnize/tanstarter
       </a>
     </div>
   );

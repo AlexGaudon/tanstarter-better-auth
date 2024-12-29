@@ -6,6 +6,8 @@ yarn.lock
 .cache
 .env
 
+./data
+
 .vercel
 .output
 .vinxi

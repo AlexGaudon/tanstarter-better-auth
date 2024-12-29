@@ -1,17 +1,19 @@
+import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/start";
-import { setResponseStatus } from "vinxi/http";
-import { getAuthSession } from "~/lib/server/auth";
+import { getAuthSession } from "../server/auth-functions";
 
-/**
- * Middleware to force authentication on a server function, and add the user to the context.
- */
 export const authMiddleware = createMiddleware().server(async ({ next }) => {
-  const { user } = await getAuthSession();
+  const auth = await getAuthSession();
 
-  if (!user) {
-    setResponseStatus(401);
-    throw new Error("Unauthorized");
+  if (!auth.isAuthenticated) {
+    throw redirect({
+      to: "/signin",
+    });
   }
 
-  return next({ context: { user } });
+  return next({
+    context: {
+      auth,
+    },
+  });
 });

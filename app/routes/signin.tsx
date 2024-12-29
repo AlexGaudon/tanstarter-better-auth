@@ -1,10 +1,12 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Button } from "~/lib/components/ui/button";
+import { authClient } from "~/lib/utils/authClient";
 
 export const Route = createFileRoute("/signin")({
   component: AuthPage,
   beforeLoad: async ({ context }) => {
-    if (context.user) {
+    console.log(context);
+    if (context.auth.isAuthenticated) {
       throw redirect({
         to: "/dashboard",
       });
@@ -19,18 +21,16 @@ function AuthPage() {
         Logo here
         <form method="GET" className="flex flex-col gap-2">
           <Button
-            formAction="/api/auth/discord"
-            type="submit"
             variant="outline"
-            size="lg"
+            type="button"
+            onClick={async () => {
+              await authClient.signIn.social({
+                provider: "discord",
+                callbackURL: "/", //redirect to dashboard after sign in
+              });
+            }}
           >
             Sign in with Discord
-          </Button>
-          <Button formAction="/api/auth/github" type="submit" variant="outline" size="lg">
-            Sign in with GitHub
-          </Button>
-          <Button formAction="/api/auth/google" type="submit" variant="outline" size="lg">
-            Sign in with Google
           </Button>
         </form>
       </div>

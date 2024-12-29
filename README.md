@@ -5,12 +5,10 @@ A minimal starter template for 🏝️ TanStack Start.
 - TanStack [Start](https://tanstack.com/start/latest) + [Router](https://tanstack.com/router/latest) + [Query](https://tanstack.com/query/latest)
 - [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
 - [Drizzle ORM](https://orm.drizzle.team/) + PostgreSQL
-- Auth based on [Lucia](https://lucia-auth.com/)
+- Auth based on [BetterAuth](https://www.better-auth.com/)
 
 Auth providers:
 
-- [x] GitHub
-- [x] Google
 - [x] Discord
 
 ## Getting Started
@@ -25,7 +23,15 @@ Auth providers:
 
 3. Create a `.env` file based on [`.env.example`](./.env.example).
 
-4. Push the schema to your database with drizzle-kit:
+4. Generate the better-auth schema with the better-auth cli
+
+   ```bash
+   pnpm db:auth:generate
+   ```
+
+   This will generate the `auth-schema.ts` file and put it in the appropriate location.
+
+5. Push the schema to your database with drizzle-kit:
 
    ```bash
    pnpm db push # npm run db push
@@ -33,7 +39,7 @@ Auth providers:
 
    https://orm.drizzle.team/docs/migrations
 
-5. Run the development server:
+6. Run the development server:
 
    ```bash
    pnpm dev # npm run dev
